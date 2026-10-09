@@ -12,5 +12,50 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This project is derived from openai/codex-plugin-cc (https://github.com/openai/codex-plugin-cc).
-It was modified to use GitHub Copilot CLI instead of Codex.
+This project is derived from openai/codex-plugin-cc (https://github.com/openai/codex-plugin-cc),
+at commit db52e28. It was modified by raganu-beka to use GitHub Copilot CLI instead of Codex.
+The files listed below were changed, added, moved, or removed in this derived work.
+
+Files changed from the original (original path in parentheses when the file was renamed):
+- .claude-plugin/plugin.json
+- agents/copilot-rescue.md (from agents/codex-rescue.md)
+- CHANGELOG.md
+- commands/adversarial-review.md
+- commands/cancel.md
+- commands/rescue.md
+- commands/result.md
+- commands/review.md
+- commands/setup.md
+- commands/status.md
+- commands/transfer.md
+- hooks/hooks.json
+- prompts/adversarial-review.md
+- prompts/stop-review-gate.md
+- scripts/copilot-companion.mjs (from scripts/codex-companion.mjs)
+- scripts/lib/claude-session-transfer.mjs
+- scripts/lib/copilot.mjs (from scripts/lib/codex.mjs)
+- scripts/lib/fs.mjs
+- scripts/lib/job-control.mjs
+- scripts/lib/process.mjs
+- scripts/lib/render.mjs
+- scripts/lib/state.mjs
+- scripts/lib/tracked-jobs.mjs
+- scripts/session-lifecycle-hook.mjs
+- scripts/stop-review-gate-hook.mjs
+- skills/copilot-cli-runtime/SKILL.md (from skills/codex-cli-runtime/SKILL.md)
+- skills/copilot-prompting/references/copilot-prompt-antipatterns.md (from skills/gpt-5-4-prompting/references/codex-prompt-antipatterns.md)
+- skills/copilot-prompting/references/copilot-prompt-recipes.md (from skills/gpt-5-4-prompting/references/codex-prompt-recipes.md)
+- skills/copilot-prompting/references/prompt-blocks.md (from skills/gpt-5-4-prompting/references/prompt-blocks.md)
+- skills/copilot-prompting/SKILL.md (from skills/gpt-5-4-prompting/SKILL.md)
+- skills/copilot-result-handling/SKILL.md (from skills/codex-result-handling/SKILL.md)
+
+New files:
+- prompts/review.md
+- prompts/session-transfer.md
+
+Files removed from the original:
+- scripts/app-server-broker.mjs
+- scripts/lib/app-server-protocol.d.ts
+- scripts/lib/app-server.mjs
+- scripts/lib/broker-endpoint.mjs
+- scripts/lib/broker-lifecycle.mjs

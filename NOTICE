@@ -12,5 +12,76 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This project is derived from openai/codex-plugin-cc (https://github.com/openai/codex-plugin-cc).
-It was modified to use GitHub Copilot CLI instead of Codex.
+This project is derived from openai/codex-plugin-cc (https://github.com/openai/codex-plugin-cc),
+at commit db52e28. It was modified by raganu-beka to use GitHub Copilot CLI instead of Codex.
+The files listed below were changed, added, moved, or removed in this derived work.
+
+Files changed from the original (original path in parentheses when the file was renamed):
+- .claude-plugin/marketplace.json
+- .github/workflows/pull-request-ci.yml
+- .gitignore
+- package-lock.json
+- package.json
+- plugins/copilot/.claude-plugin/plugin.json (from plugins/codex/.claude-plugin/plugin.json)
+- plugins/copilot/agents/copilot-rescue.md (from plugins/codex/agents/codex-rescue.md)
+- plugins/copilot/CHANGELOG.md (from plugins/codex/CHANGELOG.md)
+- plugins/copilot/commands/adversarial-review.md (from plugins/codex/commands/adversarial-review.md)
+- plugins/copilot/commands/cancel.md (from plugins/codex/commands/cancel.md)
+- plugins/copilot/commands/rescue.md (from plugins/codex/commands/rescue.md)
+- plugins/copilot/commands/result.md (from plugins/codex/commands/result.md)
+- plugins/copilot/commands/review.md (from plugins/codex/commands/review.md)
+- plugins/copilot/commands/setup.md (from plugins/codex/commands/setup.md)
+- plugins/copilot/commands/status.md (from plugins/codex/commands/status.md)
+- plugins/copilot/commands/transfer.md (from plugins/codex/commands/transfer.md)
+- plugins/copilot/hooks/hooks.json (from plugins/codex/hooks/hooks.json)
+- plugins/copilot/prompts/adversarial-review.md (from plugins/codex/prompts/adversarial-review.md)
+- plugins/copilot/prompts/stop-review-gate.md (from plugins/codex/prompts/stop-review-gate.md)
+- plugins/copilot/scripts/copilot-companion.mjs (from plugins/codex/scripts/codex-companion.mjs)
+- plugins/copilot/scripts/lib/claude-session-transfer.mjs (from plugins/codex/scripts/lib/claude-session-transfer.mjs)
+- plugins/copilot/scripts/lib/copilot.mjs (from plugins/codex/scripts/lib/codex.mjs)
+- plugins/copilot/scripts/lib/fs.mjs (from plugins/codex/scripts/lib/fs.mjs)
+- plugins/copilot/scripts/lib/job-control.mjs (from plugins/codex/scripts/lib/job-control.mjs)
+- plugins/copilot/scripts/lib/process.mjs (from plugins/codex/scripts/lib/process.mjs)
+- plugins/copilot/scripts/lib/render.mjs (from plugins/codex/scripts/lib/render.mjs)
+- plugins/copilot/scripts/lib/state.mjs (from plugins/codex/scripts/lib/state.mjs)
+- plugins/copilot/scripts/lib/tracked-jobs.mjs (from plugins/codex/scripts/lib/tracked-jobs.mjs)
+- plugins/copilot/scripts/session-lifecycle-hook.mjs (from plugins/codex/scripts/session-lifecycle-hook.mjs)
+- plugins/copilot/scripts/stop-review-gate-hook.mjs (from plugins/codex/scripts/stop-review-gate-hook.mjs)
+- plugins/copilot/skills/copilot-cli-runtime/SKILL.md (from plugins/codex/skills/codex-cli-runtime/SKILL.md)
+- plugins/copilot/skills/copilot-prompting/references/copilot-prompt-antipatterns.md (from plugins/codex/skills/gpt-5-4-prompting/references/codex-prompt-antipatterns.md)
+- plugins/copilot/skills/copilot-prompting/references/copilot-prompt-recipes.md (from plugins/codex/skills/gpt-5-4-prompting/references/codex-prompt-recipes.md)
+- plugins/copilot/skills/copilot-prompting/references/prompt-blocks.md (from plugins/codex/skills/gpt-5-4-prompting/references/prompt-blocks.md)
+- plugins/copilot/skills/copilot-prompting/SKILL.md (from plugins/codex/skills/gpt-5-4-prompting/SKILL.md)
+- plugins/copilot/skills/copilot-result-handling/SKILL.md (from plugins/codex/skills/codex-result-handling/SKILL.md)
+- README.md
+- scripts/bump-version.mjs
+- tests/bump-version.test.mjs
+- tests/commands.test.mjs
+- tests/fake-copilot-fixture.mjs (from tests/fake-codex-fixture.mjs)
+- tests/git.test.mjs
+- tests/helpers.mjs
+- tests/process.test.mjs
+- tests/render.test.mjs
+- tests/runtime.test.mjs
+- tests/state.test.mjs
+- tsconfig.json (from tsconfig.app-server.json)
+
+New files:
+- plugins/copilot/prompts/review.md
+- plugins/copilot/prompts/session-transfer.md
+
+Files moved without content changes:
+- plugins/copilot/LICENSE (from plugins/codex/LICENSE)
+- plugins/copilot/schemas/review-output.schema.json (from plugins/codex/schemas/review-output.schema.json)
+- plugins/copilot/scripts/lib/args.mjs (from plugins/codex/scripts/lib/args.mjs)
+- plugins/copilot/scripts/lib/git.mjs (from plugins/codex/scripts/lib/git.mjs)
+- plugins/copilot/scripts/lib/prompts.mjs (from plugins/codex/scripts/lib/prompts.mjs)
+- plugins/copilot/scripts/lib/workspace.mjs (from plugins/codex/scripts/lib/workspace.mjs)
+
+Files removed from the original:
+- plugins/codex/scripts/app-server-broker.mjs
+- plugins/codex/scripts/lib/app-server-protocol.d.ts
+- plugins/codex/scripts/lib/app-server.mjs
+- plugins/codex/scripts/lib/broker-endpoint.mjs
+- plugins/codex/scripts/lib/broker-lifecycle.mjs
+- tests/broker-endpoint.test.mjs
