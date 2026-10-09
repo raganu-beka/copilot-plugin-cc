@@ -239,10 +239,15 @@ const delayMs = BEHAVIOR === "slow-task" ? 400 : BEHAVIOR === "very-slow-task" ?
 setTimeout(() => finish(sessionId, prompt, Boolean(resumeSessionId), filesModified), delayMs);
 `;
   writeExecutable(scriptPath, source);
+  writeExecutable(
+    path.join(binDir, "gh"),
+    `#!/usr/bin/env node\nprocess.exit(${behavior === "gh-auth" ? 0 : 1});\n`
+  );
   if (process.platform === "win32") {
     fs.writeFileSync(path.join(binDir, "copilot.cmd"), `@echo off\r\nnode "%~dp0copilot" %*\r\n`, "utf8");
+    fs.writeFileSync(path.join(binDir, "gh.cmd"), `@echo off\r\nnode "%~dp0gh" %*\r\n`, "utf8");
   }
-  writeCopilotConfig(binDir, behavior);
+  writeCopilotConfig(binDir, behavior === "gh-auth" ? "logged-out" : behavior);
 }
 
 export function buildEnv(binDir, extra = {}) {

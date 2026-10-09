@@ -1650,6 +1650,22 @@ test("setup treats a Copilot token in the environment as logged in", () => {
   assert.doesNotMatch(result.stdout, /test-token-value/);
 });
 
+test("setup treats a GitHub CLI login as the Copilot credential fallback", () => {
+  const binDir = makeTempDir();
+  installFakeCopilot(binDir, "gh-auth");
+
+  const result = run("node", [SCRIPT, "setup", "--json"], {
+    cwd: ROOT,
+    env: buildEnv(binDir)
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.ready, true);
+  assert.equal(payload.auth.authMethod, "gh");
+  assert.match(payload.auth.detail, /gh auth/);
+});
+
 test("setup treats a custom model provider as ready without a GitHub login", () => {
   const binDir = makeTempDir();
   installFakeCopilot(binDir, "logged-out");
@@ -1786,8 +1802,10 @@ test("reviews run Copilot read-only with an allow list of inspection commands", 
   const invocation = lastInvocation(binDir);
   assert.equal(invocation.allowAllTools, false);
   assert.deepEqual(invocation.denyTools, ["write"]);
-  assert.ok(invocation.allowTools.includes("shell(git diff)"));
-  assert.ok(invocation.allowTools.every((tool) => !/push|commit|reset|checkout|branch/.test(tool)));
+  assert.ok(invocation.allowTools.includes("shell(git diff:*)"));
+  assert.ok(invocation.allowTools.includes("shell(git log:*)"));
+  assert.ok(invocation.allowTools.every((tool) => /^shell\(.+:\*\)$/.test(tool)));
+  assert.ok(invocation.allowTools.every((tool) => !/push|commit|reset|checkout|branch|grep|\brg\b/.test(tool)));
   assert.ok(invocation.args.includes("--no-ask-user"));
   assert.deepEqual(invocation.args.slice(0, 2), ["--output-format", "json"]);
 });

@@ -10,7 +10,7 @@ import process from "node:process";
 import readline from "node:readline";
 
 import { readJsonFile } from "./fs.mjs";
-import { binaryAvailable } from "./process.mjs";
+import { binaryAvailable, runCommand } from "./process.mjs";
 
 const COPILOT_COMMAND = "copilot";
 const TASK_SESSION_PREFIX = "Copilot Companion Task";
@@ -28,7 +28,6 @@ const READ_ONLY_SHELL_COMMANDS = [
   "git ls-files",
   "git rev-parse",
   "git merge-base",
-  "git grep",
   "git cat-file",
   "ls",
   "cat",
@@ -36,8 +35,6 @@ const READ_ONLY_SHELL_COMMANDS = [
   "tail",
   "wc",
   "pwd",
-  "rg",
-  "grep",
   "Get-Content",
   "Get-ChildItem",
   "Select-String"
@@ -112,7 +109,7 @@ function buildPermissionArgs(write) {
   }
   return [
     "--deny-tool=write",
-    ...READ_ONLY_SHELL_COMMANDS.map((command) => `--allow-tool=shell(${command})`)
+    ...READ_ONLY_SHELL_COMMANDS.map((command) => `--allow-tool=shell(${command}:*)`)
   ];
 }
 
@@ -471,6 +468,13 @@ function describeLogin(user) {
   return host && host !== "github.com" ? `${user.login.trim()} on ${host}` : user.login.trim();
 }
 
+function githubCliLoggedIn(cwd, env) {
+  const host = env.COPILOT_GH_HOST || env.GH_HOST || "";
+  const args = host ? ["auth", "status", "--hostname", host] : ["auth", "status"];
+  const result = runCommand("gh", args, { cwd, env });
+  return !result.error && result.status === 0;
+}
+
 export function getCopilotAuthStatus(cwd, options = {}) {
   const env = options.env ?? process.env;
   const availability = getCopilotAvailability(cwd);
@@ -516,6 +520,16 @@ export function getCopilotAuthStatus(cwd, options = {}) {
       detail: `GitHub login active for ${login}`,
       source: "config",
       authMethod: "github"
+    });
+  }
+
+  if (githubCliLoggedIn(cwd, env)) {
+    return buildAuthStatus({
+      loggedIn: true,
+      detail: "GitHub CLI login available through `gh auth` (unverified)",
+      source: "gh",
+      authMethod: "gh",
+      verified: false
     });
   }
 

@@ -67,6 +67,8 @@ const DEFAULT_STATUS_POLL_INTERVAL_MS = 2000;
 const VALID_REASONING_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
 const MODEL_NAME_PATTERN = /^[A-Za-z0-9._:/-]+$/;
 const STOP_REVIEW_TASK_MARKER = "Run a stop-gate review of the previous Claude turn.";
+const WORKER_STOPPED_EXIT_CODE = 143;
+const WORKER_CHILD_STOP_TIMEOUT_MS = 5000;
 
 function printUsage() {
   console.log(
@@ -421,6 +423,7 @@ async function executeTaskRun(request) {
     effort: request.effort,
     write: Boolean(request.write),
     onProgress: request.onProgress,
+    onSpawn: request.onSpawn,
     sessionName: resumeSessionId ? null : buildPersistentTaskSessionName(request.prompt || DEFAULT_CONTINUE_PROMPT)
   });
 
@@ -815,6 +818,9 @@ async function handleTaskWorker(argv) {
       logFile: storedJob.logFile ?? null
     }
   );
+  const stopWorker = createWorkerStopHandler();
+  process.once("SIGTERM", stopWorker.handleSignal);
+  process.once("SIGINT", stopWorker.handleSignal);
   await runTrackedJob(
     {
       ...storedJob,
@@ -824,10 +830,34 @@ async function handleTaskWorker(argv) {
     () =>
       executeTaskRun({
         ...request,
-        onProgress: progress
+        onProgress: progress,
+        onSpawn: stopWorker.trackChild
       }),
     { logFile }
   );
+}
+
+function createWorkerStopHandler() {
+  let activeChild = null;
+  return {
+    trackChild(child) {
+      activeChild = child;
+      child.once("close", () => {
+        if (activeChild === child) {
+          activeChild = null;
+        }
+      });
+    },
+    handleSignal() {
+      const child = activeChild;
+      if (!child) {
+        process.exit(WORKER_STOPPED_EXIT_CODE);
+      }
+      child.once("close", () => process.exit(WORKER_STOPPED_EXIT_CODE));
+      child.kill("SIGTERM");
+      setTimeout(() => child.kill("SIGKILL"), WORKER_CHILD_STOP_TIMEOUT_MS).unref();
+    }
+  };
 }
 
 async function handleStatus(argv) {
